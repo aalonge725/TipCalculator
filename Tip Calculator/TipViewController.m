@@ -24,15 +24,19 @@
     // Do any additional setup after loading the view.
 }
 
-- (IBAction)onTap:(id)sender {
+- (IBAction)onTap:(id)sender { // closes keyboard when user taps outside of it
     [self.view endEditing:true];
 }
 
 - (IBAction)updateLabels:(id)sender {
+    // controls hiding/showing of labels
     if (self.billAmountField.text.length == 0) {
-        [self hideLables];
+        [self hideLabels];
+    } else if (self.billAmountField.frame.origin.y > 100) {
+        [self showLabels];
     }
     
+    // calculates and displays appropriate tip and total amounts
     double tipPercentages[] = {0.15, 0.2, 0.25};
     double tipPercentage = tipPercentages[self.tipPercentageControl.selectedSegmentIndex];
     
@@ -44,7 +48,7 @@
     self.totalLabel.text = [NSString stringWithFormat:@"$%.2f", total];
 }
 
-- (void)hideLables {
+- (void)hideLabels { // hides labels if bill amount is empty
     [UIView animateWithDuration:0.5 animations:^{
         CGRect billFrame = self.billAmountField.frame;
         billFrame.origin.y += 200;
@@ -57,6 +61,22 @@
         self.labelsContainerView.frame = labelsFrame;
         
         self.labelsContainerView.alpha = 0;
+    }];
+}
+
+- (void)showLabels { // shows labels if bill amount isn't empty
+    [UIView animateWithDuration:0.5 animations:^{
+        CGRect billFrame = self.billAmountField.frame;
+        billFrame.origin.y = 100;
+        
+        self.billAmountField.frame = billFrame;
+        
+        CGRect labelsFrame = self.labelsContainerView.frame;
+        labelsFrame.origin.y = 220;
+        
+        self.labelsContainerView.frame = labelsFrame;
+        
+        self.labelsContainerView.alpha = 1;
     }];
 }
 
